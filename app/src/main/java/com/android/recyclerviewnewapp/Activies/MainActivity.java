@@ -5,8 +5,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
@@ -23,10 +25,12 @@ import com.android.recyclerviewnewapp.Utilities.ViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements DialogListener, RecyclerListener {
     private static final String TAG = "MainActivity";
-    final String cat_key = "Cat";
 
     RecyclerView view;
     ViewAdapter adapter;
@@ -41,14 +45,9 @@ public class MainActivity extends AppCompatActivity implements DialogListener, R
 
         view = findViewById(R.id.mRecyclerVIew);
         adapter = new ViewAdapter(cats, this);
+        adapter.onStartCreateRecords(); // suzdava nachalni 5 broiki Cat
         view.setAdapter(adapter);
         view.setLayoutManager(new LinearLayoutManager(this));
-
-        cats.add(new Cat("Pisanka1","Pisana", "Waiting"));
-        cats.add(new Cat("Pisanka2","Pisana", "Waiting"));
-        cats.add(new Cat("Pisanka3","Pisana", "Waiting"));
-        cats.add(new Cat("Pisanka4","Pisana", "Waiting"));
-        cats.add(new Cat("Pisanka5","Pisana", "Waiting"));
 
         //FRAGMENT DIALOG FROM HERE
         button = findViewById(R.id.mAddButton);
@@ -62,6 +61,46 @@ public class MainActivity extends AppCompatActivity implements DialogListener, R
             }
         });
 
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int res = new Random().nextInt(3)+1;
+                //Log.d("view.postDelayed","Ran once on case " + res);
+                //Log.d("Traceable","The res value in Runnable is: " + res);
+
+                switch(res) {
+                    case 1:
+                        cats.add(new Cat("Pisanka"+ new Random().nextInt(999), "Kotka", "Waiting"));
+                        try { view.postDelayed(this, 300); } catch (Exception e) { e.printStackTrace(); }
+                        break;
+                    case 2:
+                        int index = new Random().nextInt(cats.size());
+                        cats.get(index).setStatus("Active");
+                        adapter.notifyItemChanged(index);
+                        try { view.postDelayed(this, 300); } catch (Exception e) { e.printStackTrace(); }
+                        break;
+                    case 3:
+                        int index1 = new Random().nextInt(cats.size());
+                        if (cats.get(index1).getStatus().equals("Active")) {
+                            try {   //Log.d("case3","Case 3 was ran with random number " + index1 + " from maximum of " + (cats.size()-1));
+                                view.removeViewAt(index1);
+                                cats.remove(index1);
+                                adapter.notifyItemRemoved(index1);
+                                adapter.notifyDataSetChanged(); }
+                            catch (Exception e) { e.printStackTrace(); }
+                        }
+                        else {
+                            view.postDelayed(this, 300);
+                            break;}
+                        try { view.postDelayed(this, 300); } catch (Exception e) { e.printStackTrace(); }
+                        break;
+                    default:
+                        view.postDelayed(this, 300);
+                        break;
+                }
+            }
+        }, 1000);
+    //END OF MAIN ACTIVITY
     }
 
     @Override
@@ -90,9 +129,10 @@ public class MainActivity extends AppCompatActivity implements DialogListener, R
 
     @Override
     public void onFinishButtonClicked(int position) {
-        cats.remove(position);
-        view.removeViewAt(position);
-        adapter.notifyItemRemoved(position);
-        adapter.notifyDataSetChanged();
+        try {view.removeViewAt(position);
+            cats.remove(position);
+            adapter.notifyItemRemoved(position);
+            adapter.notifyDataSetChanged();}
+        catch (Exception e) { e.printStackTrace(); }
     }
 }

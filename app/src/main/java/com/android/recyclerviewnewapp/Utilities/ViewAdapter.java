@@ -30,7 +30,7 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         Context context = parent.getContext(); // Vzemame sustoqnieto na parent
         LayoutInflater inflater = LayoutInflater.from(context); // Da mojem da chetem ot XLM-a(pravi vruzkata)
         View view = inflater.inflate(R.layout.cat_element, parent, false);
-        Log.d("ViewAdapter", "onCreateViewHolder: invoked.");
+        //Log.d("ViewAdapter", "onCreateViewHolder: invoked.");
 
         return new ViewHolder(view, mRecycleViewListener);
     }
@@ -48,11 +48,19 @@ public class ViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         else {
             holder.becomeInactive();
         }
-        Log.d("ViewAdapter", "onBindViewHolder: invoked.");
+        //Log.d("ViewAdapter", "onBindViewHolder: invoked.");
     }
 
     @Override
     public int getItemCount() {
         return cats.size();
+    }
+
+    public void onStartCreateRecords() {
+        cats.add(new Cat("Pisanka1","Pisana", "Waiting"));
+        cats.add(new Cat("Pisanka2","Pisana", "Waiting"));
+        cats.add(new Cat("Pisanka3","Pisana", "Waiting"));
+        cats.add(new Cat("Pisanka4","Pisana", "Waiting"));
+        cats.add(new Cat("Pisanka5","Pisana", "Waiting"));
     }
 }
