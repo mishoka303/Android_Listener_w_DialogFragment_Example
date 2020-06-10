@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RecyclerViewNewAPP</string>
+    <string name="type_cat_name">Type cat name</string>
+    <string name="type_wait_active">Type Wait/Active</string>
+    <string name="type_cat_breed">Type cat breed</string>
+    <string name="add_cat">Add Cat</string>
+    <string name="start">Start</string>
+    <string name="back">Back</string>
+    <string name="finish_cat">FINISH CAT</string>
+</resources>
